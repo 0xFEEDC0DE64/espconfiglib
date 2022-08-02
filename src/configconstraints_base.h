@@ -66,7 +66,7 @@ template<typename T, T ... ALLOWED_VALUES>
 ConfigConstraintReturnType OneOf(typename ConfigWrapper<T>::value_t val)
 {
     if (!((ALLOWED_VALUES == val) || ...))
-        tl::make_unexpected("Value not one of the allowed ones");
+        return tl::make_unexpected("Value not one of the allowed ones");
     return {};
 }
 
