@@ -1,6 +1,9 @@
 #pragma once
 
 #include "sdkconfig.h"
+
+#pragma push_macro("LOG_LOCAL_LEVEL")
+#undef LOG_LOCAL_LEVEL
 #define LOG_LOCAL_LEVEL CONFIG_LOG_LOCAL_LEVEL_CONFIG
 
 // system includes
@@ -175,3 +178,5 @@ ConfigStatusReturnType ConfigWrapper<T>::writeToFlash(nvs_handle_t nvsHandle, va
 }
 
 } // namespace espconfig
+
+#pragma pop_macro("LOG_LOCAL_LEVEL")
