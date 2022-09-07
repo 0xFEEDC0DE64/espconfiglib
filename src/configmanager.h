@@ -22,6 +22,9 @@ public:
 #endif
 
     esp_err_t init(const char *ns);
+
+    esp_err_t loadFromFlash();
+
     //bool erase();
     ConfigStatusReturnType reset();
 

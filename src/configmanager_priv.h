@@ -12,6 +12,7 @@
 #define INSTANTIATE_CONFIGMANAGER_TEMPLATES(Type) \
     namespace espconfig { \
     template esp_err_t ConfigManager<Type>::init(const char *ns); \
+    template esp_err_t ConfigManager<Type>::loadFromFlash(); \
     /* template bool ConfigManager<Type>::erase(); */ \
     template ConfigStatusReturnType ConfigManager<Type>::reset(); \
     template ConfigWrapperInterface *ConfigManager<Type>::findConfigByKey(std::string_view key); \
@@ -108,7 +109,13 @@ esp_err_t ConfigManager<ConfigContainer>::init(const char *ns)
 
     ESP_LOGI(TAG, "initializing NVS took %lldms", std::chrono::floor<std::chrono::milliseconds>(after-before).count());
 
-    before = espchrono::millis_clock::now();
+    return loadFromFlash();
+}
+
+template<typename ConfigContainer>
+esp_err_t ConfigManager<ConfigContainer>::loadFromFlash()
+{
+    const auto before = espchrono::millis_clock::now();
 
     bool success = true;
     ConfigContainer::callForEveryConfig([&](ConfigWrapperInterface &config){
@@ -120,7 +127,7 @@ esp_err_t ConfigManager<ConfigContainer>::init(const char *ns)
         return false; // dont abort the loop
     });
 
-    after = espchrono::millis_clock::now();
+    const auto after = espchrono::millis_clock::now();
 
     ESP_LOGI(TAG, "loading all config params took %lldms", std::chrono::floor<std::chrono::milliseconds>(after-before).count());
 
